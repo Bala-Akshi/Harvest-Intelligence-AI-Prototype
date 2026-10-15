@@ -1,0 +1,5 @@
+# Exact direct dependency versions used during Phase 1 verification
+streamlit==1.66.0
+pandas==2.2.3
+plotly==6.9.0
+pytest==9.1.1

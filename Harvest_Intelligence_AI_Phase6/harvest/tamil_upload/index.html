@@ -1,0 +1,10 @@
+<!doctype html><html lang="ta"><head><meta charset="utf-8"><style>
+body{font:16px sans-serif;color:#172e24;margin:0}label{display:block;border:2px dashed #166534;border-radius:8px;padding:24px;background:#e8f0eb;cursor:pointer}label:focus-within{outline:3px solid #1e40af}input{position:absolute;width:1px;height:1px;opacity:0}p{margin:8px 0}#message{color:#9b1c1c}
+</style></head><body><label id="drop"><input id="file" type="file" accept=".csv,text/csv" aria-label="தரவுக் கோப்பைத் தேர்ந்தெடுக்கவும்"><strong>தரவுக் கோப்பைத் தேர்ந்தெடுக்கவும்</strong><p>அல்லது கோப்பை இங்கே இழுத்து விடவும்.</p><p>அதிகபட்ச அளவு: 10 மெகாபைட்</p></label><p id="message" role="status"></p><script>
+const send=(type,extra={})=>parent.postMessage({isStreamlitMessage:true,type,...extra},'*');
+const file=document.getElementById('file'),drop=document.getElementById('drop'),message=document.getElementById('message');
+function load(f){if(!f)return;if(f.size>10*1024*1024){message.textContent='கோப்பின் அளவு 10 மெகாபைட்டை மீறக்கூடாது.';return;}const reader=new FileReader();reader.onload=()=>{message.textContent='கோப்பு தேர்ந்தெடுக்கப்பட்டது.';send('streamlit:setComponentValue',{value:{name:f.name,content:reader.result.split(',')[1]},dataType:'json'});};reader.readAsDataURL(f);}
+file.addEventListener('change',()=>load(file.files[0]));drop.addEventListener('dragover',e=>e.preventDefault());drop.addEventListener('drop',e=>{e.preventDefault();load(e.dataTransfer.files[0]);});
+send('streamlit:componentReady',{apiVersion:1});send('streamlit:setFrameHeight',{height:195});
+window.addEventListener('message',e=>{if(e.data.type==='streamlit:render')send('streamlit:setFrameHeight',{height:195});});
+</script></body></html>
